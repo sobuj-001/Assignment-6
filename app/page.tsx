@@ -6,6 +6,7 @@ interface Workout {
   image: string;
   description: string;
   difficulty: string;
+  equipment: string;
   muscleGroups: string[];
   duration: number;
   caloriesBurned: number;
@@ -28,12 +29,12 @@ export default async function HomePage() {
   const workoutOrder = [
     "Barbell Bench Press",
     "Pull-Up",
-    "Barbell Squat",
+    "Back Squat",
     "Overhead Press",
     "Dumbbell Bicep Curl",
-    "Dumbbell Bicep Curl",
+    "Burpee",
     "Hollow-Body Plank",
-    "Dumbbell Bicep Curl",
+    "Kettlebell Swing",
     "Conventional Deadlift",
     "Push-Up",
     "Walking Lunge",
@@ -58,34 +59,35 @@ export default async function HomePage() {
     .filter((workout): workout is Workout => workout !== null);
 
   return (
-    <main className="min-h-screen bg-[#0b0c0f] text-white px-8 md:px-16 py-10 space-y-12">
-      <section className="w-full min-h-112 rounded-2xl border border-[#222630] bg-[#15171d] px-8 md:px-16 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="w-full md:w-[65%]">
-          <span className="text-lime-400 font-bold tracking-widest text-xs uppercase">
+    <main className="min-h-screen bg-[#0a0d0b] text-white px-5 sm:px-8 lg:px-12 xl:px-16 py-8 md:py-10">
+      <section className="w-full min-h-112 rounded-2xl border border-[#29312c] bg-[#111612] px-6 sm:px-8 md:px-12 lg:px-16 py-10 md:py-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-lg">
+        <div className="w-full md:w-[60%]">
+          <span className="text-lime-400 font-bold tracking-[0.2em] text-xs uppercase">
             WORKOUT LIBRARY
           </span>
 
-          <h1 className="mt-5 text-4xl md:text-5xl font-black uppercase tracking-tight leading-tight">
-            TRAIN WITH INTENT. LOG <br />
-            EVERY SET.
+          <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[1.05]">
+            TRAIN WITH INTENT.
+            <br />
+            LOG EVERY SET.
           </h1>
 
-          <p className="mt-6 text-gray-400 text-sm md:text-base max-w-lg leading-relaxed">
+          <p className="mt-6 text-[#9ca69f] text-sm md:text-base max-w-xl leading-7">
             FitLog is a dark, no-nonsense gym companion: pick a lift, lock it
             into today's plan, and watch the week's work add up.
           </p>
 
-          <div className="mt-7">
+          <div className="mt-8">
             <Link
               href="/workouts"
-              className="inline-block bg-lime-400 text-black font-bold text-xs px-6 py-3 rounded-md hover:bg-lime-300 transition uppercase tracking-wide"
+              className="inline-flex items-center justify-center bg-lime-400 text-black font-extrabold text-xs px-7 py-3.5 rounded-lg hover:bg-lime-300 transition duration-200 uppercase tracking-wider shadow-md"
             >
               Browse Workouts
             </Link>
           </div>
         </div>
 
-        <div className="w-full md:w-[35%] flex justify-center items-center">
+        <div className="w-full md:w-[40%] flex justify-center items-center">
           <div className="w-70 h-70 md:w-82.5 md:h-82.5 flex items-center justify-center">
             <img
               src="/images/hero-gym.png"
@@ -96,64 +98,63 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="w-full space-y-6">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
-            THE LIBRARY
-          </h2>
+      <section className="w-full mt-14">
+        <div className="mb-7">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-7 bg-lime-400 rounded-full" />
+            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
+              THE LIBRARY
+            </h2>
+          </div>
 
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-[#89938c] text-sm mt-2 ml-4">
             Explore professional workouts, track your fitness, and build your
             routine.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
           {sortedWorkouts.map((workout) => (
             <Link
               href={`/workouts/${workout.id}`}
               key={workout.id}
-              className="bg-[#15171d] rounded-2xl overflow-hidden border border-[#222630] flex flex-col justify-between hover:border-lime-400/50 transition duration-300 p-6"
+              className="group bg-[#111612] rounded-2xl overflow-hidden border border-[#29312c] flex flex-col justify-between hover:border-lime-400/60 transition-all duration-300 p-5 shadow-md"
             >
               <div>
-                <div className="relative h-48 w-full rounded-xl overflow-hidden bg-black mb-4 flex items-center justify-center">
+                <div className="relative h-48 w-full rounded-xl overflow-hidden bg-[#080a09] mb-4 flex items-center justify-center">
                   <img
                     src={workout.image}
                     alt={workout.name}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
-
-                  <span className="absolute top-3 right-3 bg-lime-400 text-black text-xs font-bold px-2.5 py-1 rounded-full uppercase">
-                    {workout.difficulty}
-                  </span>
                 </div>
 
-                <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-2">
-                  {workout.name}
-                </h3>
-
-                <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                  {workout.description}
-                </p>
-
-                <div className="flex flex-wrap gap-1.5 mb-4">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {workout.muscleGroups?.map(
                     (muscle: string, index: number) => (
                       <span
                         key={index}
-                        className="bg-[#222630] text-gray-300 text-xs px-2.5 py-1 rounded-md font-medium"
+                        className="bg-lime-400 text-black text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider"
                       >
                         {muscle}
                       </span>
                     )
                   )}
                 </div>
+
+                <h3 className="text-lg md:text-xl font-extrabold uppercase tracking-tight text-white mb-1 group-hover:text-lime-400 transition-colors duration-200">
+                  {workout.name}
+                </h3>
+
+                <p className="text-[#89938c] text-xs md:text-sm mb-5">
+                  {workout.equipment}
+                </p>
               </div>
 
-              <div className="pt-4 border-t border-[#222630] flex items-center justify-between text-xs text-gray-400 font-medium">
-                <span>⏱️ {workout.duration} mins</span>
+              <div className="pt-4 border-t border-[#29312c] flex items-center justify-between text-xs text-[#89938c] font-semibold">
+                <span>⏱️ {workout.duration} min</span>
                 <span>🔥 {workout.caloriesBurned} kcal</span>
-                <span className="text-lime-400">⭐ {workout.rating}</span>
+                <span className="text-white">⭐ {workout.rating}</span>
               </div>
             </Link>
           ))}
