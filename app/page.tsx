@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 
 interface Workout {
@@ -60,7 +59,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-[#0b0c0f] text-white px-8 md:px-16 py-10 space-y-12">
-      <section className="w-full min-h-[448px] rounded-2xl border border-[#222630] bg-[#15171d] px-8 md:px-16 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+      <section className="w-full min-h-112 rounded-2xl border border-[#222630] bg-[#15171d] px-8 md:px-16 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="w-full md:w-[65%]">
           <span className="text-lime-400 font-bold tracking-widest text-xs uppercase">
             WORKOUT LIBRARY
@@ -87,7 +86,7 @@ export default async function HomePage() {
         </div>
 
         <div className="w-full md:w-[35%] flex justify-center items-center">
-          <div className="w-[280px] h-[280px] md:w-[330px] md:h-[330px] flex items-center justify-center">
+          <div className="w-70 h-70 md:w-82.5 md:h-82.5 flex items-center justify-center">
             <img
               src="/images/hero-gym.png"
               alt="Workout Machine"
