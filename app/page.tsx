@@ -164,8 +164,10 @@ export default async function HomePage() {
       <footer className="w-full border-t border-[#29312c] bg-[#0c100e] mt-16 py-6 px-5 sm:px-8 lg:px-12 xl:px-16 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
           <img
-            src="images/logo.png"
+            src="/images/logo.png"
             alt="FitLog Logo"
+            width={20}
+            height={20}
             className="w-5 h-5 object-contain"
             style={{ transform: "rotate(135deg)" }}
           />
