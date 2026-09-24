@@ -47,7 +47,7 @@ export default async function HomePage() {
     .map((name) => {
       const index = remainingWorkouts.findIndex(
         (workout) =>
-          workout.name.toLowerCase().trim() === name.toLowerCase().trim()
+          workout.name.toLowerCase().trim() === name.toLowerCase().trim(),
       );
 
       if (index === -1) {
@@ -67,9 +67,9 @@ export default async function HomePage() {
           </span>
 
           <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[1.05]">
-            TRAIN WITH INTENT.
+            TRAIN WITH INTENT.LOG
             <br />
-            LOG EVERY SET.
+            EVERY SET.
           </h1>
 
           <p className="mt-6 text-[#9ca69f] text-sm md:text-base max-w-xl leading-7">
@@ -90,7 +90,7 @@ export default async function HomePage() {
         <div className="w-full md:w-[40%] flex justify-center items-center">
           <div className="w-70 h-70 md:w-82.5 md:h-82.5 flex items-center justify-center">
             <img
-              src="/images/hero-gym.png"
+              src="images/hero-gym.png"
               alt="Workout Machine"
               className="w-full h-full object-contain"
             />
@@ -138,7 +138,7 @@ export default async function HomePage() {
                       >
                         {muscle}
                       </span>
-                    )
+                    ),
                   )}
                 </div>
 
@@ -160,7 +160,23 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      <footer className="w-full border-t border-[#29312c] bg-[#0c100e] mt-16 py-6 px-5 sm:px-8 lg:px-12 xl:px-16 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="images/logo.png"
+            alt="FitLog Logo"
+            className="w-5 h-5 object-contain"
+            style={{ transform: "rotate(135deg)" }}
+          />
+          <span className="text-white font-black text-sm tracking-widest uppercase">
+            FITLOG
+          </span>
+        </div>
+        <p className="text-[#89938c] text-xs sm:text-sm text-center sm:text-right">
+          © 2026 FitLog — Workout Library. Train hard, log honest.
+        </p>
+      </footer>
     </main>
   );
 }
-
