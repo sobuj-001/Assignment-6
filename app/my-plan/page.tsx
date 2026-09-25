@@ -12,6 +12,8 @@ function MyPlanContent() {
   const [activeTab, setActiveTab] = useState<'today' | 'saved'>('today');
   const [planWorkouts, setPlanWorkouts] = useState<any[]>([]);
   const [savedWorkouts, setSavedWorkouts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState<string>('duration');
 
   useEffect(() => {
     if (tabParam === 'saved') {
@@ -22,18 +24,24 @@ function MyPlanContent() {
   }, [tabParam]);
 
   const loadData = () => {
-    const storedPlan = localStorage.getItem('fitlog_plan');
-    if (storedPlan) {
-      setPlanWorkouts(JSON.parse(storedPlan));
-    } else {
-      setPlanWorkouts([]);
-    }
+    try {
+      const storedPlan = localStorage.getItem('fitlog_plan');
+      if (storedPlan) {
+        setPlanWorkouts(JSON.parse(storedPlan));
+      } else {
+        setPlanWorkouts([]);
+      }
 
-    const storedSaved = localStorage.getItem('fitlog_saved');
-    if (storedSaved) {
-      setSavedWorkouts(JSON.parse(storedSaved));
-    } else {
-      setSavedWorkouts([]);
+      const storedSaved = localStorage.getItem('fitlog_saved');
+      if (storedSaved) {
+        setSavedWorkouts(JSON.parse(storedSaved));
+      } else {
+        setSavedWorkouts([]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,9 +85,29 @@ function MyPlanContent() {
 
   const currentList = activeTab === 'today' ? planWorkouts : savedWorkouts;
 
+  const sortedList = [...currentList].sort((a, b) => {
+    if (sortBy === 'duration') {
+      return (Number(b.duration) || Number(b.time) || 0) - (Number(a.duration) || Number(a.time) || 0);
+    } else if (sortBy === 'calories') {
+      return (Number(b.caloriesBurned) || Number(b.calories) || 0) - (Number(a.caloriesBurned) || Number(a.calories) || 0);
+    } else if (sortBy === 'rating') {
+      return (Number(b.rating) || 0) - (Number(a.rating) || 0);
+    } else {
+      return 0;
+    }
+  });
+
   const totalExercises = currentList.length;
   const totalMinutes = currentList.reduce((acc, curr) => acc + (Number(curr.duration) || Number(curr.time) || 0), 0);
   const totalCalories = currentList.reduce((acc, curr) => acc + (Number(curr.caloriesBurned) || Number(curr.calories) || 0), 0);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-lime-400 font-bold text-sm tracking-wider uppercase">Loading workouts…</p>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col justify-between">
@@ -113,7 +141,7 @@ function MyPlanContent() {
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => setActiveTab('today')}
-              className={`flex-1 sm:flex-none px-6 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+              className={`flex-1 sm:flex-none px-6 py-2 rounded-lg text-xs font-bold uppercase transition-all cursor-pointer ${
                 activeTab === 'today'
                   ? 'bg-black text-white border border-[#29312c]'
                   : 'text-[#89938c] hover:text-white'
@@ -123,7 +151,7 @@ function MyPlanContent() {
             </button>
             <button
               onClick={() => setActiveTab('saved')}
-              className={`flex-1 sm:flex-none px-6 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+              className={`flex-1 sm:flex-none px-6 py-2 rounded-lg text-xs font-bold uppercase transition-all cursor-pointer ${
                 activeTab === 'saved'
                   ? 'bg-black text-white border border-[#29312c]'
                   : 'text-[#89938c] hover:text-white'
@@ -132,9 +160,27 @@ function MyPlanContent() {
               Saved
             </button>
           </div>
+
+          <div className="flex items-center gap-2 px-3 py-1 text-xs text-[#89938c] w-full sm:w-auto justify-end">
+            <span>Sort By</span>
+            <div className="relative inline-flex items-center">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-black text-white border border-[#29312c] px-3 py-1.5 pr-8 rounded-lg text-xs font-semibold focus:outline-none appearance-none cursor-pointer"
+              >
+                <option value="duration">Duration</option>
+                <option value="calories">Calories</option>
+                <option value="rating">Rating</option>
+              </select>
+              <span className="absolute right-2.5 pointer-events-none text-xs text-[#89938c]">
+                ▼
+              </span>
+            </div>
+          </div>
         </div>
 
-        {currentList.length === 0 ? (
+        {sortedList.length === 0 ? (
           <div className="bg-[#111612] border border-[#29312c] rounded-2xl py-20 px-6 text-center flex flex-col items-center justify-center">
             <h2 className="text-2xl font-black uppercase tracking-wider mb-2 text-white">
               NOTHING HERE YET
@@ -151,7 +197,7 @@ function MyPlanContent() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-            {currentList.map((workout, index) => (
+            {sortedList.map((workout, index) => (
               <div
                 key={workout.id || index}
                 className="bg-[#111612] border border-[#29312c] rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4"
@@ -167,7 +213,7 @@ function MyPlanContent() {
                       {workout.name || workout.title || workout.workoutName || "Unnamed Workout"}
                     </h3>
                     <p className="text-[#89938c] text-xs mb-2">
-                      {workout.category || workout.equipment || workout.difficulty || workout.type || "General"}
+                      {workout.equipment || workout.category || workout.difficulty || "General"}
                     </p>
                     <div className="flex items-center gap-4 text-xs text-[#89938c]">
                       <span>⏱ {workout.duration || workout.time || 0} min</span>
@@ -184,6 +230,19 @@ function MyPlanContent() {
                   >
                     View Details
                   </Link>
+
+                  {activeTab === 'today' && (
+                    <button
+                      onClick={() => {
+                        toast.success("Workout marked as done!", { position: "top-right", autoClose: 2000, theme: "dark" });
+                        handleRemoveFromPlan(workout.id);
+                      }}
+                      className="bg-lime-400 hover:bg-lime-300 text-black text-xs font-extrabold px-4 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <span>✓</span> Mark as Done
+                    </button>
+                  )}
+
                   <button
                     onClick={() => {
                       if (activeTab === 'today') {
@@ -228,7 +287,7 @@ function MyPlanContent() {
 
 export default function MyPlanPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-black text-white flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-black text-white flex items-center justify-center"><p className="text-lime-400 font-bold text-sm tracking-wider uppercase">Loading workouts…</p></div>}>
       <MyPlanContent />
     </Suspense>
   );

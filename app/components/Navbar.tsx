@@ -2,9 +2,11 @@
 'use client';
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [planCount, setPlanCount] = useState(0);
   const [savedCount, setSavedCount] = useState(0);
 
@@ -37,6 +39,9 @@ export default function Navbar() {
     };
   }, []);
 
+  const isWorkoutsActive = pathname === '/';
+  const isMyPlanActive = pathname.startsWith('/my-plan');
+
   return (
     <nav className="sticky top-0 z-50 bg-[#0c100e]/95 backdrop-blur-md text-white px-6 py-4 flex items-center justify-between border-b border-[#29312c]">
       <Link className="flex items-center gap-2.5" href="/">
@@ -50,17 +55,31 @@ export default function Navbar() {
         </span>
       </Link>
 
-      <div className="flex items-center bg-[#111612] px-3 py-1.5 rounded-full border border-[#29312c]">
-        <Link className="bg-lime-400 text-black font-semibold text-sm px-4 py-1.5 rounded-full transition-all" href="/">
+      <div className="flex items-center bg-[#111612] p-1 rounded-full border border-[#29312c]">
+        <Link 
+          className={`font-semibold text-sm px-5 py-1.5 rounded-full transition-all ${
+            isWorkoutsActive 
+              ? 'bg-lime-400 text-black shadow-md' 
+              : 'text-gray-400 hover:text-white'
+          }`} 
+          href="/"
+        >
           Workouts
         </Link>
-        <Link className="text-gray-400 hover:text-white font-medium text-sm px-4 py-1.5 transition-colors" href="/my-plan">
+        <Link 
+          className={`font-medium text-sm px-5 py-1.5 rounded-full transition-colors ${
+            isMyPlanActive 
+              ? 'bg-lime-400 text-black shadow-md font-semibold' 
+              : 'text-gray-400 hover:text-white'
+          }`} 
+          href="/my-plan"
+        >
           My Plan
         </Link>
       </div>
 
       <div className="flex items-center gap-6 text-sm">
-        <Link className="flex items-center gap-2 hover:opacity-80 transition" href="/my-plan">
+        <Link className="flex items-center gap-2 hover:opacity-80 transition" href="/my-plan?tab=today">
           <span className="text-gray-400">Plan</span>
           <span className="bg-lime-400 text-black font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">
             {planCount}

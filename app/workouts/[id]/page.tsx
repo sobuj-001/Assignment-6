@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 
 export default function WorkoutDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const resolvedParams = use(params);
+  const workoutId = resolvedParams.id;
+
   const [workout, setWorkout] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -16,8 +19,7 @@ export default function WorkoutDetailPage({
   useEffect(() => {
     async function fetchWorkout() {
       try {
-        const resolvedParams = await params;
-        const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${resolvedParams.id}`);
+        const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${workoutId}`);
         const data = await res.json();
         
         if (!data || data.error) {
@@ -33,7 +35,7 @@ export default function WorkoutDetailPage({
     }
 
     fetchWorkout();
-  }, [params]);
+  }, [workoutId]);
 
   const handleAddToPlan = () => {
     if (!workout) return;
